@@ -14,6 +14,8 @@ import static graphql.nadel.util.FpKit.map;
 public class NodeId {
     /**
      * Every AST node is given an id as additional data
+     *
+     * 每一个 ast节点 都给予了一个id作为额外数据。
      */
     public static final String ID = "id";
 

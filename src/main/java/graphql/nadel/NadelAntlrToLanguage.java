@@ -9,6 +9,7 @@ import graphql.language.NodeBuilder;
 import graphql.language.ObjectTypeDefinition;
 import graphql.language.SDLDefinition;
 import graphql.language.ScalarTypeDefinition;
+import graphql.language.SourceLocation;
 import graphql.language.UnionTypeDefinition;
 import graphql.nadel.dsl.CommonDefinition;
 import graphql.nadel.dsl.EnumTypeDefinitionWithTransformation;
@@ -50,7 +51,7 @@ import static graphql.nadel.util.FpKit.map;
 @Internal
 public class NadelAntlrToLanguage extends GraphqlAntlrToLanguage {
 
-    // todo
+    // todo 保证县城安全吗
     private int idCounter = 1;
 
     public NadelAntlrToLanguage(CommonTokenStream tokens, MultiSourceReader multiSourceReader) {
@@ -60,9 +61,11 @@ public class NadelAntlrToLanguage extends GraphqlAntlrToLanguage {
     @Override
     protected void addCommonData(NodeBuilder nodeBuilder, ParserRuleContext parserRuleContext) {
         super.addCommonData(nodeBuilder, parserRuleContext);
+        //  每一个 ast节点 都给予了一个id作为额外数据。
         nodeBuilder.additionalData(additionalIdData());
     }
 
+    // 额外id数据
     private Map<String, String> additionalIdData() {
         Map<String, String> additionalData = new LinkedHashMap<>();
         String nodeIdVal = String.valueOf(idCounter++);
@@ -135,8 +138,13 @@ public class NadelAntlrToLanguage extends GraphqlAntlrToLanguage {
 
     private FieldTransformation createFieldTransformation(StitchingDSLParser.FieldTransformationContext ctx) {
         if (ctx.fieldMappingDefinition() != null) {
-            return new FieldTransformation(createFieldMappingDefinition(ctx.fieldMappingDefinition()),
-                    getSourceLocation(ctx), new ArrayList<>(), additionalIdData());
+            FieldMappingDefinition fieldMappingDefinition = createFieldMappingDefinition(ctx.fieldMappingDefinition());
+            SourceLocation sourceLocation = getSourceLocation(ctx);
+            Map<String, String> additionalIdData = additionalIdData();
+
+            return new FieldTransformation(fieldMappingDefinition
+                    , sourceLocation
+                    , new ArrayList<>(), additionalIdData);
         } else if (ctx.underlyingServiceHydration() != null) {
             return new FieldTransformation(createUnderlyingServiceHydration(ctx.underlyingServiceHydration()),
                     getSourceLocation(ctx), new ArrayList<>(), additionalIdData());
