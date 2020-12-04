@@ -19,12 +19,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * todo 想知道干啥用的，看 1. 咋构建的；2. 咋使用的；
+ * // 通用定义 = common{ 类型系统定义 | 类型系统拓展 } # 两个都是 graphql-java里边的
+ * commonDefinition: 'common' '{' (typeSystemDefinition|typeSystemExtension)* '}';
+ */
 @Internal
 public class CommonDefinition extends AbstractNode<CommonDefinition> {
 
+    // sdl定义列表
     private List<SDLDefinition> typeDefinitions;
 
-    private CommonDefinition(List<SDLDefinition> typeDefinitions, SourceLocation sourceLocation, List<Comment> comments, IgnoredChars ignoredChars, Map<String, String> additionalData) {
+    private CommonDefinition(List<SDLDefinition> typeDefinitions,
+                             SourceLocation sourceLocation,
+                             List<Comment> comments,
+                             IgnoredChars ignoredChars,
+                             Map<String, String> additionalData) {
         super(sourceLocation, comments, ignoredChars, additionalData);
         this.typeDefinitions = typeDefinitions;
     }
@@ -69,15 +79,18 @@ public class CommonDefinition extends AbstractNode<CommonDefinition> {
 
     public static class Builder implements NodeBuilder {
 
+        // 注释
         private List<Comment> comments = new ArrayList<>();
+        // 资源位置
         private SourceLocation sourceLocation;
+        // 类型定义列表
         private List<SDLDefinition> typeDefinitions = new ArrayList<>();
+        // 忽略的字符
         private IgnoredChars ignoredChars = IgnoredChars.EMPTY;
+        // 额外的数据
         private Map<String, String> additionalData = new LinkedHashMap<>();
 
-        private Builder() {
-
-        }
+        private Builder() { }
 
         public Builder comments(List<Comment> comments) {
             this.comments = comments;

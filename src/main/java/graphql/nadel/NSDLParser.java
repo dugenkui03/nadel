@@ -29,8 +29,10 @@ public class NSDLParser {
         return parseDSL(new StringReader(input));
     }
 
+    /**
+     * 解析 nadel dsl
+     */
     public StitchingDsl parseDSL(Reader reader) {
-
         MultiSourceReader multiSourceReader;
         if (reader instanceof MultiSourceReader) {
             multiSourceReader = (MultiSourceReader) reader;
